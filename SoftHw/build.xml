@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!--  project default="clean"  basedir="." -->
+<project default="test"   basedir="." >
+  <description>
+    simple example build file
+  </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  
+  
+<path id="maram">
+        <pathelement location="Test\junit-4.10.jar"/>
+        <pathelement location="org.hamcrest-core-1.3.jar"/>                    
+    </path> 
+  <target name="init" depends ="jar">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends = "init">
+    <!-- Compile the Java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" debug="true" includeantruntime="false" classpath="D:\eclipse\eclipse-workspace\SoftHw\Test\junit-4.10.jar">
+	   </javac>
+  </target>
+
+ <target name="compile-testcases" depends="compile">
+        <mkdir dir="${dist}"/>
+        <javac srcdir="${src}"  destdir="${dist}" debug="true" includeantruntime="false" classpath="D:\eclipse\eclipse-workspace\SoftHw\Test\junit-4.10.jar" >
+     <classpath>          
+                <path refid="maram"/>
+                <pathelement location="${dist}"/>
+            </classpath>
+        </javac>        
+    </target>
+    
+        <target name="jar" 
+        description="generate the distribution">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar destfile="${dir}"/>
+    <fileset dir="${build}" >
+    </fileset>
+  </target>  
+  
+      <target name="test" depends="compile-testcases"  >
+        <!--fork : each test will run in its own JVM (to seperate test cases)-->
+        <junit printsummary="true" haltonfailure="true" fork="true" >
+            <classpath>
+                <path refid="maram"></path>
+                <pathelement location="${dist}"/>
+                <pathelement location="${dist}"/>
+            </classpath>
+            <formatter type="brief" usefile="false"/>
+            <batchtest >
+                <fileset dir="${build}" >
+                     <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+            
+        </junit>
+    </target>
+  
+  
+ 
+  
+ 
+  <target name="clean"
+        description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+  
+
+</project>
